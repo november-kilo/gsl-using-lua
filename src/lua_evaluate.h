@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <ncurses.h>
 #include "lua536.h"
 
 struct Result {

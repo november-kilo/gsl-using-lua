@@ -2,7 +2,8 @@
 #define LUA_EMBEDDED_EXAMPLE_MAIN_LOOP_H
 
 #include <string.h>
-#include <ncurses.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "lua_evaluate.h"
 #include "lua_integrate.h"
 

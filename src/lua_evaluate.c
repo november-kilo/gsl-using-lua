@@ -53,10 +53,10 @@ int lua_evaluate_function(int dim, long *inputs, Result *outputs) {
 void evaluate_function(char *data_file_name, char *script_file_name) {
     FILE *data_file = fopen(data_file_name, "r");
     if (data_file == NULL) {
-        printw("Failed to open data file.\n");
+        printf("Failed to open data file.\n");
     } else {
         if (luaL_dofile(luaState, script_file_name) != LUA_OK) {
-            printw("%s\n", lua_tostring(luaState, -1));
+            printf("%s\n", lua_tostring(luaState, -1));
         } else {
             int n = count_lines(data_file);
             Result function_outputs[n];
@@ -66,10 +66,10 @@ void evaluate_function(char *data_file_name, char *script_file_name) {
 
             for (int i = 0; i < n; i++) {
                 if (function_outputs[i].error_message != NULL) {
-                    printw("f(%l) = %s\n", function_outputs[i].x, function_outputs[i].error_message);;
+                    printf("f(%ld) = %s\n", function_outputs[i].x, function_outputs[i].error_message);;
                     free(function_outputs[i].error_message);
                 } else {
-                    printw("f(%l) = %g\n", function_outputs[i].x, function_outputs[i].answer);
+                    printf("f(%ld) = %g\n", function_outputs[i].x, function_outputs[i].answer);
                 }
             }
         }
