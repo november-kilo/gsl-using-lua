@@ -1,6 +1,5 @@
 This application is written in C++, built with [meson](https://mesonbuild.com/), and
 uses the following:
-
 * [ImGui](https://github.com/ocornut/imgui.git) (git submodule)
 * [ImPlot](https://github.com/epezent/implot.git) (git submodule)
 * [Lua](https://www.lua.org/)

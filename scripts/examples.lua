@@ -10,6 +10,6 @@ function sine_x(x, alpha)
     return math.sin(x)
 end
 
-function foo(x, alpha)
+function modulated_sine(x, alpha)
     return x * math.sin(4 * x)
 end
