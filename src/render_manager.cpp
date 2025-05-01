@@ -247,11 +247,13 @@ void RenderManager::renderPlotBoundLines() {
 	if (state.selectedIntegrationMethod == GslIntegrationMethod::QAGS ||
 		state.selectedIntegrationMethod == GslIntegrationMethod::QAG) {
 
+		float progress = state.isAnimating ? state.animationProgress : 1.0f;
+
 		auto pointsToShow =
 			static_cast<std::vector<double>::size_type>(std::floor(
 				static_cast<float>(
 					state.lastIntegrationResult.extended_x_points.size()) *
-				state.animationProgress));
+				progress));
 
 		const double *x_points =
 			state.lastIntegrationResult.extended_x_points.data();
@@ -291,8 +293,6 @@ void RenderManager::calculatePointsToShow() {
 
 void RenderManager::renderFunctionPlot() {
 	calculatePointsToShow();
-	ImGui::Text("Points to show: %d", static_cast<int>(state.pointsToShow));
-	ImGui::Text("Is animating: %s", state.isAnimating ? "Yes" : "No");
 	ImPlot::PlotLine("f(x)",
 					 state.lastIntegrationResult.extended_x_points.data(),
 					 state.lastIntegrationResult.extended_y_points.data(),
