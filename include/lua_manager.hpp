@@ -17,19 +17,20 @@ class LuaManager {
   public:
 	explicit LuaManager(sol::state &lua);
 
-	// Scripts management
 	void loadScripts(const std::string &directory);
+
 	[[nodiscard]]
 	bool loadScript(size_t scriptIndex, double alpha, std::string &error);
 
-	// Accessors
 	[[nodiscard]]
 	const std::vector<ScriptFile> &getScripts() const;
+
 	[[nodiscard]]
 	const std::vector<std::string> &getAvailableFunctions() const;
+
 	[[nodiscard]]
-	std::optional<sol::protected_function>
-	getFunction(const std::string &functionName);
+	std::optional<sol::protected_function> getFunction(const std::string &functionName);
+
 	[[nodiscard]]
 	bool hasScripts() const;
 };

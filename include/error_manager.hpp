@@ -19,8 +19,7 @@ class ErrorManager {
 
 	void addError(const std::string &message);
 	void renderErrorWindow();
-	static void gslErrorHandler(const char *reason, const char *file, int line,
-								int gsl_errno);
+	static void gslErrorHandler(const char *reason, const char *file, int line, int gsl_errno);
 
   private:
 	ErrorManager() = default;
@@ -29,8 +28,6 @@ class ErrorManager {
 
 	void renderClearButton();
 	void renderErrorEntries();
-	void
-	renderTimestamp(const std::chrono::steady_clock::time_point &timestamp);
-	std::string
-	formatTimeAgo(const std::chrono::steady_clock::time_point &timestamp);
+	void renderTimestamp(const std::chrono::steady_clock::time_point &timestamp);
+	std::string formatTimeAgo(const std::chrono::steady_clock::time_point &timestamp);
 };

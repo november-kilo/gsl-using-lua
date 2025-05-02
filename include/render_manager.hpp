@@ -11,8 +11,7 @@
 
 class RenderManager {
   public:
-	RenderManager(AppState &state, LuaManager &luaManager,
-				  IntegrationManager &integrationManager);
+	RenderManager(AppState &state, LuaManager &luaManager, IntegrationManager &integrationManager);
 
 	void setRefreshCallback(std::function<void()> callback);
 
@@ -56,8 +55,7 @@ class RenderManager {
 
 	void renderPlotBoundLines();
 
-	static void renderPlotBoundLine(const char *label, double x_pos,
-									const ImVec4 &color);
+	static void renderPlotBoundLine(const char *label, double x_pos, const ImVec4 &color);
 
 	void fixQagKey();
 };

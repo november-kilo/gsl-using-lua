@@ -18,7 +18,6 @@ class Application {
 
   private:
 	AppState state;
-	sol::state lua;
 	LuaManager luaManager;
 	IntegrationManager integrationManager;
 	std::unique_ptr<RenderManager> renderManager;
@@ -36,6 +35,5 @@ class Application {
 	static void pre_render();
 	void post_render() const;
 	static void glfwErrorCallback(int error, const char *description);
-	static void gslErrorHandler(const char *reason, const char *file, int line,
-								int gsl_errno);
+	static void gslErrorHandler(const char *reason, const char *file, int line, int gsl_errno);
 };

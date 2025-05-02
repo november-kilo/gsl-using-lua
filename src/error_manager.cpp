@@ -41,22 +41,18 @@ void ErrorManager::renderErrorEntries() {
 	}
 }
 
-void ErrorManager::renderTimestamp(
-	const std::chrono::steady_clock::time_point &timestamp) {
+void ErrorManager::renderTimestamp(const std::chrono::steady_clock::time_point &timestamp) {
 	static const ImVec4 TIMESTAMP_COLOR(0.5f, 0.5f, 0.5f, 1.0f);
 	std::string timeAgo = formatTimeAgo(timestamp);
 	ImGui::TextColored(TIMESTAMP_COLOR, "[%s]", timeAgo.c_str());
 }
 
-std::string ErrorManager::formatTimeAgo(
-	const std::chrono::steady_clock::time_point &timestamp) {
+std::string ErrorManager::formatTimeAgo(const std::chrono::steady_clock::time_point &timestamp) {
 	static const int SECONDS_PER_MINUTE = 60;
 	static const int SECONDS_PER_HOUR = 3600;
 
 	auto now = std::chrono::steady_clock::now();
-	auto elapsed =
-		std::chrono::duration_cast<std::chrono::seconds>(now - timestamp)
-			.count();
+	auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - timestamp).count();
 
 	if (elapsed < SECONDS_PER_MINUTE) {
 		return std::to_string(elapsed) + " seconds ago";
@@ -67,11 +63,9 @@ std::string ErrorManager::formatTimeAgo(
 	}
 }
 
-void ErrorManager::gslErrorHandler(const char *reason, const char *file,
-								   int line, int gsl_errno) {
+void ErrorManager::gslErrorHandler(const char *reason, const char *file, int line, int gsl_errno) {
 	std::stringstream ss;
-	ss << "GSL Error: " << reason << " at " << file << ":" << line
-	   << " (GSL errno " << gsl_errno << ")";
+	ss << "GSL Error: " << reason << " at " << file << ":" << line << " (GSL errno " << gsl_errno << ")";
 
 	ErrorManager::getInstance().addError(ss.str());
 }

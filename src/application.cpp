@@ -11,8 +11,7 @@ void Application::glfwErrorCallback(int error, const char *description) {
 	ErrorManager::getInstance().addError(ss.str());
 }
 
-Application::Application()
-	: state{}, lua{}, luaManager(lua), integrationManager{} {
+Application::Application() : state{}, lua{}, luaManager(lua), integrationManager{} {
 	lua.open_libraries(sol::lib::base, sol::lib::math);
 	glfwSetErrorCallback(glfwErrorCallback);
 }
@@ -24,8 +23,7 @@ void Application::init() {
 	initImGui();
 	initApp();
 
-	renderManager =
-		std::make_unique<RenderManager>(state, luaManager, integrationManager);
+	renderManager = std::make_unique<RenderManager>(state, luaManager, integrationManager);
 	renderManager->setRefreshCallback([this]() { refresh(); });
 }
 
@@ -46,8 +44,7 @@ void Application::initGlfw() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #endif
 
-	state.window =
-		glfwCreateWindow(1280, 720, "Integration GUI", nullptr, nullptr);
+	state.window = glfwCreateWindow(1280, 720, "Integration GUI", nullptr, nullptr);
 	if (!state.window) {
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
@@ -78,8 +75,7 @@ void Application::initLua() {
 		std::string error;
 		if (luaManager.loadScript(0, state.alpha, error)) {
 			if (!luaManager.getAvailableFunctions().empty()) {
-				state.selectedFunctionName =
-					luaManager.getAvailableFunctions()[0];
+				state.selectedFunctionName = luaManager.getAvailableFunctions()[0];
 			}
 		} else {
 			state.currentScriptError = std::move(error);
@@ -103,11 +99,9 @@ void Application::refreshLua() {
 	luaManager.loadScripts("scripts");
 	if (luaManager.hasScripts()) {
 		std::string error;
-		if (luaManager.loadScript(state.selectedScriptIndex, state.alpha,
-								  error)) {
+		if (luaManager.loadScript(state.selectedScriptIndex, state.alpha, error)) {
 			if (!luaManager.getAvailableFunctions().empty()) {
-				state.selectedFunctionName =
-					luaManager.getAvailableFunctions()[0];
+				state.selectedFunctionName = luaManager.getAvailableFunctions()[0];
 			}
 		} else {
 			state.currentScriptError = std::move(error);

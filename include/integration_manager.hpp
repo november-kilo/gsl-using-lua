@@ -16,35 +16,21 @@ class IntegrationManager {
 	static std::string gsl_integration_error;
 
 	static double gslFunctionWrapper(double x, void *params);
-	static void handlePlotGenerationError(AppState &state,
-										  IntegrationResult &result);
-	static void setCurrentScriptError(AppState &state,
-									  IntegrationResult &result,
-									  std::string &error_message);
+	static void handlePlotGenerationError(AppState &state, IntegrationResult &result);
+	static void setCurrentScriptError(AppState &state, IntegrationResult &result, std::string &error_message);
 
-	bool handleIntegrationStatus(int status, AppState &state,
-								 IntegrationResult &result, double abserr);
-	void calculatePlotRange(const AppState &state, double &plot_x_min,
-							double &plot_x_max);
-	bool performGslIntegration(AppState &state, IntegrationResult &result,
-							   const GslFunctionParams &params);
-	std::optional<GslFunctionParams> getFunctionParams(AppState &state,
-													   LuaManager &luaManager);
-	bool generatePlotPoints(AppState &state, IntegrationResult &result,
-							const GslFunctionParams &params);
+	bool handleIntegrationStatus(int status, AppState &state, IntegrationResult &result, double abserr);
+	void calculatePlotRange(const AppState &state, double &plot_x_min, double &plot_x_max);
+	bool performGslIntegration(AppState &state, IntegrationResult &result, const GslFunctionParams &params);
+	std::optional<GslFunctionParams> getFunctionParams(AppState &state, LuaManager &luaManager);
+	bool generatePlotPoints(AppState &state, IntegrationResult &result, const GslFunctionParams &params);
 	void initializePlotVectors(IntegrationResult &result, int num_points);
-	bool calculateExtendedPoints(double plot_x_min, double plot_x_max,
-								 IntegrationResult &result,
+	bool calculateExtendedPoints(double plot_x_min, double plot_x_max, IntegrationResult &result,
 								 const GslFunctionParams &params);
-	bool calculateIntegrationPoints(const AppState &state,
-									IntegrationResult &result,
-									const GslFunctionParams &params);
-	bool calculatePoints(double start_x, double end_x,
-						 std::vector<double> &x_points,
-						 std::vector<double> &y_points,
+	bool calculateIntegrationPoints(const AppState &state, IntegrationResult &result, const GslFunctionParams &params);
+	bool calculatePoints(double start_x, double end_x, std::vector<double> &x_points, std::vector<double> &y_points,
 						 const GslFunctionParams &params);
 
   public:
-	IntegrationResult performIntegration(AppState &state,
-										 LuaManager &luaManager);
+	IntegrationResult performIntegration(AppState &state, LuaManager &luaManager);
 };

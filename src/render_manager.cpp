@@ -1,14 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <render_manager.hpp>
 
-RenderManager::RenderManager(AppState &state, LuaManager &luaManager,
-							 IntegrationManager &integrationManager)
-	: state(state), luaManager(luaManager),
-	  integrationManager(integrationManager) {}
+RenderManager::RenderManager(AppState &state, LuaManager &luaManager, IntegrationManager &integrationManager)
+	: state(state), luaManager(luaManager), integrationManager(integrationManager) {}
 
-void RenderManager::setRefreshCallback(std::function<void()> callback) {
-	refreshCallback = std::move(callback);
-}
+void RenderManager::setRefreshCallback(std::function<void()> callback) { refreshCallback = std::move(callback); }
 
 void RenderManager::renderGui() {
 	ImGui::Begin("Integration Settings");
@@ -44,28 +40,22 @@ void RenderManager::renderLuaScriptCombo() {
 	if (scripts.empty())
 		return;
 
-	if (ImGui::BeginCombo(
-			"Script",
-			scripts[state.selectedScriptIndex].display_name.c_str())) {
+	if (ImGui::BeginCombo("Script", scripts[state.selectedScriptIndex].display_name.c_str())) {
 		auto availableFunctions = luaManager.getAvailableFunctions();
 
 		for (size_t i = 0; i < scripts.size(); i++) {
 			bool is_selected = (state.selectedScriptIndex == i);
 
-			if (ImGui::Selectable(scripts[i].display_name.c_str(),
-								  is_selected)) {
+			if (ImGui::Selectable(scripts[i].display_name.c_str(), is_selected)) {
 				if (state.selectedScriptIndex != i) {
 					state.selectedScriptIndex = i;
 					std::string error;
 					if (luaManager.loadScript(i, state.alpha, error)) {
 						availableFunctions = luaManager.getAvailableFunctions();
-						state.selectedFunctionName =
-							availableFunctions.empty() ? ""
-													   : availableFunctions[0];
+						state.selectedFunctionName = availableFunctions.empty() ? "" : availableFunctions[0];
 					} else {
 						state.currentScriptError = std::move(error);
-						ErrorManager::getInstance().addError(
-							state.currentScriptError);
+						ErrorManager::getInstance().addError(state.currentScriptError);
 					}
 				}
 			}
@@ -82,12 +72,10 @@ void RenderManager::renderLuaFunctionName() {
 	auto availableFunctions = luaManager.getAvailableFunctions();
 	if (availableFunctions.empty()) {
 		static char selectedFunctionName_buf[128];
-		strncpy(selectedFunctionName_buf, state.selectedFunctionName.c_str(),
-				sizeof(selectedFunctionName_buf) - 1);
+		strncpy(selectedFunctionName_buf, state.selectedFunctionName.c_str(), sizeof(selectedFunctionName_buf) - 1);
 		selectedFunctionName_buf[sizeof(selectedFunctionName_buf) - 1] = '\0';
 
-		if (ImGui::InputText("Function Name", selectedFunctionName_buf,
-							 sizeof(selectedFunctionName_buf))) {
+		if (ImGui::InputText("Function Name", selectedFunctionName_buf, sizeof(selectedFunctionName_buf))) {
 			state.selectedFunctionName = selectedFunctionName_buf;
 		}
 		ImGui::TextDisabled("(No functions found in script)");
@@ -110,24 +98,20 @@ void RenderManager::renderLuaFunctionName() {
 					*out_text = (*items)[idx].c_str();
 					return true;
 				},
-				&availableFunctions,
-				static_cast<int>(availableFunctions.size()))) {
+				&availableFunctions, static_cast<int>(availableFunctions.size()))) {
 			state.selectedFunctionName = availableFunctions[current_item];
 		}
 	}
 }
 
 void RenderManager::renderIntegrationMethodSelector() {
-	const char *method_names[] = {
-		"QAGS - Finite limits [a,b]", "QAGI - Infinite range (-inf,+inf)",
-		"QAGIU - Semi-infinite [a,+inf)", "QAGIL - Semi-infinite (-inf,b]",
-		"QAG - Finite limits with key"};
+	const char *method_names[] = {"QAGS - Finite limits [a,b]", "QAGI - Infinite range (-inf,+inf)",
+								  "QAGIU - Semi-infinite [a,+inf)", "QAGIL - Semi-infinite (-inf,b]",
+								  "QAG - Finite limits with key"};
 
 	int current_method = static_cast<int>(state.selectedIntegrationMethod);
-	if (ImGui::Combo("Integration Method", &current_method, method_names,
-					 IM_ARRAYSIZE(method_names))) {
-		state.selectedIntegrationMethod =
-			static_cast<GslIntegrationMethod>(current_method);
+	if (ImGui::Combo("Integration Method", &current_method, method_names, IM_ARRAYSIZE(method_names))) {
+		state.selectedIntegrationMethod = static_cast<GslIntegrationMethod>(current_method);
 	}
 
 	switch (state.selectedIntegrationMethod) {
@@ -157,8 +141,7 @@ void RenderManager::renderIntegrationMethodSelector() {
 void RenderManager::renderIntegrateButton() {
 	if (ImGui::Button("Integrate")) {
 		fixQagKey();
-		state.lastIntegrationResult =
-			integrationManager.performIntegration(state, luaManager);
+		state.lastIntegrationResult = integrationManager.performIntegration(state, luaManager);
 	}
 }
 
@@ -189,8 +172,7 @@ void RenderManager::renderIntegrationResult() const {
 
 void RenderManager::renderErrorMessage() const {
 	if (!state.currentScriptError.empty()) {
-		ImGui::TextColored(ImVec4(1, 0, 0, 1), "Error: %s",
-						   state.currentScriptError.c_str());
+		ImGui::TextColored(ImVec4(1, 0, 0, 1), "Error: %s", state.currentScriptError.c_str());
 		ErrorManager::getInstance().addError(state.currentScriptError);
 	}
 }
@@ -227,8 +209,7 @@ void RenderManager::renderAxesLimits() {
 	ImPlot::SetNextAxesLimits(x_min, x_max, y_min, y_max, ImGuiCond_Always);
 }
 
-void RenderManager::renderPlotBoundLine(const char *label, double x_pos,
-										const ImVec4 &color) {
+void RenderManager::renderPlotBoundLine(const char *label, double x_pos, const ImVec4 &color) {
 	ImPlot::PushStyleColor(ImPlotCol_Line, color);
 	ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 1.0f);
 
@@ -249,23 +230,17 @@ void RenderManager::renderPlotBoundLines() {
 
 		float progress = state.isAnimating ? state.animationProgress : 1.0f;
 
-		auto pointsToShow =
-			static_cast<std::vector<double>::size_type>(std::floor(
-				static_cast<float>(
-					state.lastIntegrationResult.extended_x_points.size()) *
-				progress));
+		auto pointsToShow = static_cast<std::vector<double>::size_type>(
+			std::floor(static_cast<float>(state.lastIntegrationResult.extended_x_points.size()) * progress));
 
-		const double *x_points =
-			state.lastIntegrationResult.extended_x_points.data();
+		const double *x_points = state.lastIntegrationResult.extended_x_points.data();
 
 		if (pointsToShow > 0 && x_points[pointsToShow - 1] >= state.x_min) {
-			renderPlotBoundLine("Lower bound", state.x_min,
-								ImVec4(1.0f, 0.2f, 0.2f, 0.8f));
+			renderPlotBoundLine("Lower bound", state.x_min, ImVec4(1.0f, 0.2f, 0.2f, 0.8f));
 		}
 
 		if (pointsToShow > 0 && x_points[pointsToShow - 1] >= state.x_max) {
-			renderPlotBoundLine("Upper bound", state.x_max,
-								ImVec4(0.2f, 0.8f, 0.2f, 0.8f));
+			renderPlotBoundLine("Upper bound", state.x_max, ImVec4(0.2f, 0.8f, 0.2f, 0.8f));
 		}
 	}
 }
@@ -276,8 +251,7 @@ void RenderManager::calculatePointsToShow() {
 		std::floor(static_cast<float>(totalPoints) * state.animationProgress));
 
 	if (state.isAnimating) {
-		state.animationProgress +=
-			ImGui::GetIO().DeltaTime * state.animationSpeed;
+		state.animationProgress += ImGui::GetIO().DeltaTime * state.animationSpeed;
 		if (state.animationProgress >= 1.0f) {
 			state.animationProgress = 1.0f;
 			state.isAnimating = false;
@@ -293,19 +267,16 @@ void RenderManager::calculatePointsToShow() {
 
 void RenderManager::renderFunctionPlot() {
 	calculatePointsToShow();
-	ImPlot::PlotLine("f(x)",
-					 state.lastIntegrationResult.extended_x_points.data(),
-					 state.lastIntegrationResult.extended_y_points.data(),
-					 static_cast<int>(state.pointsToShow));
+	ImPlot::PlotLine("f(x)", state.lastIntegrationResult.extended_x_points.data(),
+					 state.lastIntegrationResult.extended_y_points.data(), static_cast<int>(state.pointsToShow));
 }
 
 void RenderManager::renderSignedArea() {
 	if (!state.isAnimating) {
 		ImPlot::PushStyleVar(ImPlotStyleVar_FillAlpha, 0.25f);
-		ImPlot::PlotShaded(
-			"Signed Area", state.lastIntegrationResult.x_points.data(),
-			state.lastIntegrationResult.y_points.data(),
-			static_cast<int>(state.lastIntegrationResult.x_points.size()), 0.0);
+		ImPlot::PlotShaded("Signed Area", state.lastIntegrationResult.x_points.data(),
+						   state.lastIntegrationResult.y_points.data(),
+						   static_cast<int>(state.lastIntegrationResult.x_points.size()), 0.0);
 		ImPlot::PopStyleVar();
 	}
 }
